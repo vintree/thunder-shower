@@ -1,0 +1,35 @@
+{
+  "name": "today-ico",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "export NODE_ENV='development' && sudo node-dev ./app.js",
+    "release": "export NODE_ENV='production' && sudo pm2 start ./app.js ",
+    "stop": "sudo pm2 stop all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wuguzi/today-ico.git"
+  },
+  "author": "px",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wuguzi/today-ico/issues"
+  },
+  "homepage": "https://github.com/wuguzi/today-ico#readme",
+  "description": "",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "http": "^0.0.0",
+    "https": "^1.0.0",
+    "koa": "^2.3.0",
+    "koa-jsonp": "^2.0.2",
+    "koa-router": "^7.2.1",
+    "koa-sslify": "^2.1.2",
+    "mongodb": "^2.2.31",
+    "node-fetch": "^1.7.1",
+    "urlx": "^1.2.5"
+  }
+}
