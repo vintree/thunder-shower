@@ -5,9 +5,9 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "export NODE_ENV='development' && sudo node-dev ./app.js",
-    "release": "export NODE_ENV='production' && sudo pm2 start ./app.js ",
-    "stop": "sudo pm2 stop all"
+    "dev": "export NODE_ENV='development' && node-dev ./app.js",
+    "release": "export NODE_ENV='production' && pm2 start ./app.js ",
+    "stop": "pm2 stop all"
   },
   "repository": {
     "type": "git",
