@@ -2,7 +2,7 @@
  * @Author: puxiao.wh 
  * @Date: 2017-08-31 02:43:00 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-09-01 02:39:58
+ * @Last Modified time: 2017-09-01 02:46:20
  */
 
 /**
@@ -49,8 +49,6 @@ async function bizhongchouRequest(url) {
             icoName: 1
         })
 
-        console.log('name---', icoName, icoList);
-
         if(icoList.length === 0) {
             const detailText = await _.text(detailLink)
             const $1 = cheerio.load(detailText)
@@ -79,7 +77,6 @@ async function bizhongchouRequest(url) {
 exports.bizhongchou = async () => {
     let count = 1
     while(count !== 0) {
-        console.log('count', count);
         const listCount = await bizhongchouRequest(`https://bizhongchou.com/project_ico/r--id-0-loc--state-0-tag--k--type-0-p-${count}.html`)
         if(listCount > 0) {
             count++

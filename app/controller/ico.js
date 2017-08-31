@@ -2,7 +2,7 @@
  * @Author: puxiao.wh 
  * @Date: 2017-07-23 17:05:36 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-09-01 02:30:19
+ * @Last Modified time: 2017-09-01 02:49:23
  */
 
 const asyncHooks = require('async_hooks')
@@ -52,6 +52,7 @@ var getIcoList = async (ctx, next) => {
     let pageCount = 0
     const icoList = await daoico.get(seletOptions, projection)
 
+    log.action.info(((ms) => `action startup in ${ms} ms, Address: /rest/ico/getIcoList`)(Date.now() - startTime))
     ctx.response.type ='application/json'
     ctx.response.body = {
         code: 200,
@@ -61,9 +62,6 @@ var getIcoList = async (ctx, next) => {
         },
         success: true
     }
-
-    log.action.info(((ms) => `action startup in ${ms} ms, Address: /rest/ico/getIcoList`)(Date.now() - startTime))
-    
 }
 
 var getIcoDetail = async (ctx, next) => {
@@ -72,6 +70,7 @@ var getIcoDetail = async (ctx, next) => {
         _id: ctx.query._id
     })
 
+    log.action.info(((ms) => `action startup in ${ms} ms, Address: /rest/ico/getIcoDetail`)(Date.now() - startTime))    
     ctx.response.type ='application/json'
     ctx.response.body = {
         code: 200,
@@ -81,7 +80,6 @@ var getIcoDetail = async (ctx, next) => {
         },
         success: true
     }
-    log.action.info(((ms) => `action startup in ${ms} ms, Address: /rest/ico/getIcoDetail`)(Date.now() - startTime))    
 }
 
 module.exports = {
