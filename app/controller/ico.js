@@ -2,20 +2,19 @@
  * @Author: puxiao.wh 
  * @Date: 2017-07-23 17:05:36 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-08-26 02:55:46
+ * @Last Modified time: 2017-09-01 02:30:19
  */
 
-// const userService = require('./../service/_userService.js');
 const asyncHooks = require('async_hooks')
 const cheerio = require('cheerio')
 const _ = require('../utils/request')
 const serviceico = require('../service/ico')
 const daoico = require('../dao/ico')
-
-var autoRefreshIco = async (ctx, next) => {
-    let query = ctx.query;
-    let userId = query.id;
-    const ico = await serviceico.bizhongchou()
+const log = require('../../config/log4js')
+// var autoRefreshIco = async (ctx, next) => {
+//     let query = ctx.query;
+//     let userId = query.id;
+//     const ico = await serviceico.bizhongchou()
     // ctx.response.type ='application/json';
     // ctx.response.body = {
     //     id: query.id,
@@ -24,16 +23,17 @@ var autoRefreshIco = async (ctx, next) => {
     // };
 
     // ctx.response.body = text
-}
+// }
 
-var saveUserinfo = (ctx, next) => {
-    const requestString = ctx.data;
-    //TODO数据处理
-    Console.log(requestString);
-};
+// var saveUserinfo = (ctx, next) => {
+//     const requestString = ctx.data
+//     //TODO数据处理
+//     Console.log(requestString)
+// };
 
 
 var getIcoList = async (ctx, next) => {
+    const startTime = new Date()
     const seletOptions = {
         isDel: false,
         icoState: ctx.query.icoState || ''
@@ -52,7 +52,7 @@ var getIcoList = async (ctx, next) => {
     let pageCount = 0
     const icoList = await daoico.get(seletOptions, projection)
 
-    ctx.response.type ='application/json';
+    ctx.response.type ='application/json'
     ctx.response.body = {
         code: 200,
         data: {
@@ -60,15 +60,19 @@ var getIcoList = async (ctx, next) => {
             success: true
         },
         success: true
-    };
+    }
+
+    log.action.info(((ms) => `action startup in ${ms} ms, Address: /rest/ico/getIcoList`)(Date.now() - startTime))
+    
 }
 
 var getIcoDetail = async (ctx, next) => {
+    const startTime = new Date()
     const icoDetail = await serviceico.getIcoDetail({
         _id: ctx.query._id
     })
 
-    ctx.response.type ='application/json';
+    ctx.response.type ='application/json'
     ctx.response.body = {
         code: 200,
         data: {
@@ -76,12 +80,13 @@ var getIcoDetail = async (ctx, next) => {
             success: true
         },
         success: true
-    };
+    }
+    log.action.info(((ms) => `action startup in ${ms} ms, Address: /rest/ico/getIcoDetail`)(Date.now() - startTime))    
 }
 
 module.exports = {
-    'GET /rest/ico/autoRefreshIco': autoRefreshIco,
+    // 'GET /rest/ico/autoRefreshIco': autoRefreshIco,
     'GET /rest/ico/getIcoList': getIcoList,
     'GET /rest/ico/getIcoDetail': getIcoDetail,
-    'POST /saveUserinfo': saveUserinfo
+    // 'POST /saveUserinfo': saveUserinfo
 };

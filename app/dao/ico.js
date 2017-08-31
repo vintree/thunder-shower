@@ -2,13 +2,14 @@
  * @Author: puxiao.wh 
  * @Date: 2017-07-23 17:06:07 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-08-26 02:56:28
+ * @Last Modified time: 2017-09-01 01:59:17
  */
 
 const mongo = require('mongodb');
 const connect = require('./lib/connect')
 const ObjectID = mongo.ObjectID;
 const mongoClient = mongo.MongoClient;
+const log = require('../../config/log4js')
 
 exports.created = async (options) => {
     const db = await connect()
@@ -25,6 +26,7 @@ exports.created = async (options) => {
             dropDups: true
         })
     } catch(e) {
+        log.db.error(`tableName: ico; function: created; info: ${e};`)
         console.error(e)
     }
     db.close()
@@ -50,6 +52,7 @@ exports.get = async (options = {}, projection = {}) => {
         ico = await db.collection('ico').find(options, projection).skip((page - 1) * pageSize).limit(pageSize).toArray();
         pageTotal = await db.collection('ico').find({hasDelete: false}).count();
     } catch(e) {
+        log.db.error(`tableName: ico; function: get; info: ${e}`)
         console.error(e);
     }
     db.close()

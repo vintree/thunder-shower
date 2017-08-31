@@ -2,76 +2,77 @@
  * @Author: puxiao.wh 
  * @Date: 2017-07-23 17:05:52 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-08-26 02:55:41
+ * @Last Modified time: 2017-08-31 02:44:55
  */
 
 const cheerio = require('cheerio')
 const daoico = require('./../dao/ico');
 const _ = require('../utils/request')
+const scheduleSite = require('./schedule/site')
 
-async function bizhongchouRequest(url) {
-    const text = await _.text(url)
-    const $ = cheerio.load(text)
-    const listDom = $('#list_content_all').children('li')
+// async function bizhongchouRequest(url) {
+//     const text = await _.text(url)
+//     const $ = cheerio.load(text)
+//     const listDom = $('#list_content_all').children('li')
 
-    listDom.each(async function(item) {
-        const doms = $(this)
-        const infoDom = doms.find('.progress-news').children()
+//     listDom.each(async function(item) {
+//         const doms = $(this)
+//         const infoDom = doms.find('.progress-news').children()
 
-        const icoName = doms.find('.activity-name').children('a').text().trim()
-        const icoImgUrl = doms.find('img').attr('src')
-        const icoDes = doms.find('.library-list-desc').text().trim()
-        const icoTargetAmount = infoDom.eq(0).find('a').text().trim()
-        const icoStarTime = infoDom.eq(1).find('a').text().trim()
-        let icoState = doms.find('.ico-list-state-before, .ico-list-state-after').text().trim()
+//         const icoName = doms.find('.activity-name').children('a').text().trim()
+//         const icoImgUrl = doms.find('img').attr('src')
+//         const icoDes = doms.find('.library-list-desc').text().trim()
+//         const icoTargetAmount = infoDom.eq(0).find('a').text().trim()
+//         const icoStarTime = infoDom.eq(1).find('a').text().trim()
+//         let icoState = doms.find('.ico-list-state-before, .ico-list-state-after').text().trim()
 
-        switch(icoState) {
-            case '预热中':
-                icoState = 'THE'
-                break
-            case '已完成':
-                icoState = 'FINISH'
-                break
-            case '进行中':
-                icoState = 'ING'
-                break
-        }
+//         switch(icoState) {
+//             case '预热中':
+//                 icoState = 'THE'
+//                 break
+//             case '已完成':
+//                 icoState = 'FINISH'
+//                 break
+//             case '进行中':
+//                 icoState = 'ING'
+//                 break
+//         }
 
-        const detailLink = `http://bizhongchou.com${infoDom.eq(0).find('a').attr('href')}`
-        const icoSource = '币众筹'
+//         const detailLink = `http://bizhongchou.com${infoDom.eq(0).find('a').attr('href')}`
+//         const icoSource = '币众筹'
         
-        const detailText = await _.text(detailLink)
-        const $1 = cheerio.load(detailText)
-        const icoDetail = $1('.l_main').html()
-        const icoSiteLink = $1('.shoucang_span').children('a').attr('href')
+//         const detailText = await _.text(detailLink)
+//         const $1 = cheerio.load(detailText)
+//         const icoDetail = $1('.l_main').html()
+//         const icoSiteLink = $1('.shoucang_span').children('a').attr('href')
 
-        daoico.created({
-            icoName,
-            icoImgUrl,
-            icoDes,
-            icoTargetAmount,
-            icoStarTime,
-            icoState,
-            icoSource,
-            icoDetail,
-            detailLink,
-            icoSiteLink,
-            isDel: false
-        })
-    })
-    return listDom.length
-}
+//         daoico.created({
+//             icoName,
+//             icoImgUrl,
+//             icoDes,
+//             icoTargetAmount,
+//             icoStarTime,
+//             icoState,
+//             icoSource,
+//             icoDetail,
+//             detailLink,
+//             icoSiteLink,
+//             isDel: false
+//         })
+//     })
+//     return listDom.length
+// }
 
-function reconvert(str){ 
+function reconvert(str) {
     str = str.replace(/(\\u)(\w{4})/gi,function($0) { 
-        return (String.fromCharCode(parseInt((escape($0).replace(/(%5Cu)(\w{4})/g,"$2")),16))); }); str = str.replace(/(&#x)(\w{4});/gi,function($0){ return String.fromCharCode(parseInt(escape($0).replace(/(%26%23x)(\w{4})(%3B)/g,"$2"),16)); }); return str; 
-    }
+    return (String.fromCharCode(parseInt((escape($0).replace(/(%5Cu)(\w{4})/g,"$2")),16))); }); str = str.replace(/(&#x)(\w{4});/gi,function($0){ return String.fromCharCode(parseInt(escape($0).replace(/(%26%23x)(\w{4})(%3B)/g,"$2"),16)); }); return str; 
+}
 
 
 exports.bizhongchou = async () => {
     let count = 1
     while(count !== 0) {
-        const listCount = await bizhongchouRequest(`https://bizhongchou.com/project_ico/r--id-0-loc--state-0-tag--k--type-0-p-${count}.html`)
+        const listCount = await scheduleSite.bizhongchouRequest(`https://bizhongchou.com/project_ico/r--id-0-loc--state-0-tag--k--type-0-p-${count}.html`)
         if(listCount > 0) {
             count++
         } else {

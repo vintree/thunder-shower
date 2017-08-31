@@ -1,12 +1,19 @@
 const urlx = require('urlx')
 const fetch = require('node-fetch')
+const log = require('../../config/log4js')
 
 async function getCommon(url, params) {
-    if(!!params) {
-        url = `${url}${urlx.stringify(params)}`
+    try {
+        if(!!params) {
+            url = `${url}${urlx.stringify(params)}`
+        }
+        const res = await fetch(url)
+        log.request.info(`url: ${url}; params: ${params}; `)
+        return res
+    } catch(e) {
+        log.request.error(`url: ${url}; params: ${params}; info: ${e};`)
+        console.error(e);
     }
-    const res = await fetch(url)
-    return res
 }
 
 exports.get = async(url, params) => {
