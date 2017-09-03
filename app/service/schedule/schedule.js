@@ -11,6 +11,7 @@ async function first() {
         console.log('现在时间：',new Date())
         log.action.info('Schedule task: bizhongchou')
         await site.bizhongchou()
+        await site.ico365()
     });
 }
 
@@ -23,10 +24,12 @@ async function second() {
         console.log('现在时间：',new Date())
         log.action.info('Schedule task: bizhongchou')        
         await site.bizhongchou()
+        await site.ico365()
     });
 }
 
-exports.init = () => {
-    first()
-    second()
+exports.init = async () => {
+    await first()
+    await second()
+    // site.ico365()
 }

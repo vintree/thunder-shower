@@ -2,7 +2,7 @@
  * @Author: puxiao.wh 
  * @Date: 2017-08-31 02:43:00 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-09-01 02:46:20
+ * @Last Modified time: 2017-09-03 14:46:39
  */
 
 /**
@@ -16,6 +16,7 @@ async function bizhongchouRequest(url) {
     const text = await _.text(url)
     const $ = cheerio.load(text)
     const listDom = $('#list_content_all').children('li')
+    const icoSourceCode = 'bzc'
 
     listDom.each(async function(item) {
         const doms = $(this)
@@ -39,18 +40,19 @@ async function bizhongchouRequest(url) {
                 icoState = 'ING'
                 break
         }
-        const detailLink = `http://bizhongchou.com${infoDom.eq(0).find('a').attr('href')}`
+        const icoDetailLink = `http://bizhongchou.com${infoDom.eq(0).find('a').attr('href')}`
         const icoSource = '币众筹'
         
         // 查询是否已经记录过ico
         const icoList = await daoico.get({
-            icoName
+            icoName,
+            icoSourceCode
         }, {
             icoName: 1
         })
 
         if(icoList.length === 0) {
-            const detailText = await _.text(detailLink)
+            const detailText = await _.text(icoDetailLink)
             const $1 = cheerio.load(detailText)
             const icoDetail = $1('.l_main').html()
             const icoSiteLink = $1('.shoucang_span').children('a').attr('href')
@@ -59,13 +61,15 @@ async function bizhongchouRequest(url) {
                 icoName,
                 icoImgUrl,
                 icoDes,
+                icoTargetType: undefined,
                 icoTargetAmount,
                 icoStarTime,
                 icoState,
                 icoSource,
                 icoDetail,
-                detailLink,
+                icoDetailLink,
                 icoSiteLink,
+                icoSourceCode,
                 isDel: false
             })
         }
@@ -74,6 +78,7 @@ async function bizhongchouRequest(url) {
     return listDom.length
 }
 
+// 币众筹
 exports.bizhongchou = async () => {
     let count = 1
     while(count !== 0) {
@@ -84,5 +89,61 @@ exports.bizhongchou = async () => {
             count = 0
             break
         }
+    }
+}
+
+// ico365
+exports.ico365 = async (options = {curnum: 0, addnum: 20}) => {
+    const { curnum, addnum } = options
+    const url = 'https://www.ico365.com/api/itemlist'
+    const params = {
+        type: 'all',
+        curnum,
+        addnum
+    }
+    const icoSourceCode = 'ico365'
+    let ico365Data = await _.get(url, params)
+    let ico365List = []
+
+    if(ico365Data.success) {
+        ico365List = ico365Data.data.item_list
+    }
+
+    ico365List.forEach(async function(data) {
+        const icoName = data.item_theme
+        const _icoStates = ['THE', 'ING', 'FINISH']
+        const icoState = _icoStates[data.item_state - 1]
+        // 查询是否已经记录过ico
+        const icoList = await daoico.get({
+            icoName,
+            icoSourceCode
+        }, {
+            icoName: 1
+        })
+
+        if(icoList.length === 0) {
+            daoico.created({
+                icoName,
+                icoImgUrl: data.pic_url,
+                icoDes: data.item_describe,
+                icoTargetType: data.target_money_curtype_state,
+                icoTargetAmount: data.sum_money_currency,
+                icoStarTime: data.item_start_time,
+                icoState,
+                icoSource: 'ico356',
+                icoSourceCode,
+                icoDetail: undefined,
+                icoDetailLink: undefined,
+                icoSiteLink: undefined,
+                isDel: false
+            })
+        }
+    })
+
+    if(ico365List.length !== 0) {
+        await exports.ico365({
+            curnum: curnum + addnum,
+            addnum: addnum
+        })
     }
 }

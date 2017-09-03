@@ -8,10 +8,10 @@ async function getCommon(url, params) {
             url = `${url}${urlx.stringify(params)}`
         }
         const res = await fetch(url)
-        log.request.info(`url: ${url}; params: ${params}; `)
+        log.request.info(`url: ${url}; params: ${JSON.stringify(params)}; `)
         return res
     } catch(e) {
-        log.request.error(`url: ${url}; params: ${params}; info: ${e};`)
+        log.request.error(`url: ${url}; params: ${JSON.stringify(params)}; info: ${e};`)
         console.error(e);
     }
 }

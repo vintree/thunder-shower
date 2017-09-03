@@ -2,7 +2,7 @@
  * @Author: puxiao.wh 
  * @Date: 2017-07-23 17:06:07 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-09-01 01:59:17
+ * @Last Modified time: 2017-09-03 15:05:06
  */
 
 const mongo = require('mongodb');
@@ -33,7 +33,7 @@ exports.created = async (options) => {
     return icoList
 }
 
-exports.get = async (options = {}, projection = {}) => {
+exports.get = async (options = {}, projection = {}, sort = {}) => {
     const db = await connect()
     let ico = {}
     
@@ -49,7 +49,7 @@ exports.get = async (options = {}, projection = {}) => {
     delete projection.pageSize
 
     try {
-        ico = await db.collection('ico').find(options, projection).skip((page - 1) * pageSize).limit(pageSize).toArray();
+        ico = await db.collection('ico').find(options, projection).skip((page - 1) * pageSize).limit(pageSize).sort(sort).toArray();
         pageTotal = await db.collection('ico').find({hasDelete: false}).count();
     } catch(e) {
         log.db.error(`tableName: ico; function: get; info: ${e}`)

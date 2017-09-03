@@ -2,7 +2,7 @@
  * @Author: puxiao.wh 
  * @Date: 2017-07-23 17:05:36 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-09-01 02:49:23
+ * @Last Modified time: 2017-09-03 15:07:22
  */
 
 const asyncHooks = require('async_hooks')
@@ -48,9 +48,10 @@ var getIcoList = async (ctx, next) => {
         icoTargetAmount: 1,
         icoStarTime: 1,
         icoState: 1,
+        icoSource: 1
     }
     let pageCount = 0
-    const icoList = await daoico.get(seletOptions, projection)
+    const icoList = await daoico.get(seletOptions, projection, {icoStarTime: -1})
 
     log.action.info(((ms) => `action startup in ${ms} ms, Address: /rest/ico/getIcoList`)(Date.now() - startTime))
     ctx.response.type ='application/json'

@@ -2,7 +2,7 @@
  * @Author: puxiao.wh 
  * @Date: 2017-07-23 17:05:52 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-08-31 02:44:55
+ * @Last Modified time: 2017-09-03 14:17:52
  */
 
 const cheerio = require('cheerio')
@@ -63,23 +63,26 @@ const scheduleSite = require('./schedule/site')
 //     return listDom.length
 // }
 
+
+
+
+// exports.bizhongchou = async () => {
+//     let count = 1
+//     while(count !== 0) {
+//         const listCount = await scheduleSite.bizhongchouRequest(`https://bizhongchou.com/project_ico/r--id-0-loc--state-0-tag--k--type-0-p-${count}.html`)
+//         if(listCount > 0) {
+//             count++
+//         } else {
+//             count = 0
+//             break
+//         }
+//     }
+// }
+
+
 function reconvert(str) {
     str = str.replace(/(\\u)(\w{4})/gi,function($0) { 
     return (String.fromCharCode(parseInt((escape($0).replace(/(%5Cu)(\w{4})/g,"$2")),16))); }); str = str.replace(/(&#x)(\w{4});/gi,function($0){ return String.fromCharCode(parseInt(escape($0).replace(/(%26%23x)(\w{4})(%3B)/g,"$2"),16)); }); return str; 
-}
-
-
-exports.bizhongchou = async () => {
-    let count = 1
-    while(count !== 0) {
-        const listCount = await scheduleSite.bizhongchouRequest(`https://bizhongchou.com/project_ico/r--id-0-loc--state-0-tag--k--type-0-p-${count}.html`)
-        if(listCount > 0) {
-            count++
-        } else {
-            count = 0
-            break
-        }
-    }
 }
 
 exports.getIcoDetail = async (options) => {
