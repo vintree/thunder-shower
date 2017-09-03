@@ -2,7 +2,7 @@
  * @Author: puxiao.wh 
  * @Date: 2017-08-31 02:43:00 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-09-03 14:46:39
+ * @Last Modified time: 2017-09-03 16:04:30
  */
 
 /**
@@ -70,6 +70,7 @@ async function bizhongchouRequest(url) {
                 icoDetailLink,
                 icoSiteLink,
                 icoSourceCode,
+                icoPlatformLink: 'https://bizhongchou.com/project_ico.html',
                 isDel: false
             })
         }
@@ -135,6 +136,7 @@ exports.ico365 = async (options = {curnum: 0, addnum: 20}) => {
                 icoDetail: undefined,
                 icoDetailLink: undefined,
                 icoSiteLink: undefined,
+                icoPlatformLink: 'https://www.ico365.com/items',
                 isDel: false
             })
         }
