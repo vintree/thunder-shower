@@ -2,7 +2,7 @@
  * @Author: puxiao.wh 
  * @Date: 2017-08-31 02:43:00 
  * @Last Modified by: puxiao.wh
- * @Last Modified time: 2017-09-10 01:52:58
+ * @Last Modified time: 2017-09-10 02:02:12
  */
 
 /**
@@ -12,60 +12,8 @@ const cheerio = require('cheerio')
 const daoNotice = require('../../dao/notice')
 const _ = require('../../utils/request')
 
-// async function huobiRequest(url) {
-//     const text = await _.text(url)
-//     const $ = cheerio.load(text)
-//     const listDom = $('.notice').children('li')
-//     const noticeSourceCode = 'hb'
-//     const noticeSource = '火币网'
-
-//     listDom.each(async function(item) {
-//         const doms = $(this)
-//         const noticeTit = doms.find('.tit')
-        
-//         const noticeName = noticeTit.children('a').text()
-//         const noticeDetailLink = `https://www.huobi.com${noticeTit.children('a').attr('href')}`
-//         const noticeCreateTime = doms.find('.news').next()
-//         const noticeState = 'official'
-
-//         // 查询是否已经记录过ico
-//         const noticeList = await daoNotice.get({
-//             noticeName,
-//             noticeSourceCode
-//         }, {
-//             noticeName: 1
-//         })
-
-//         if(noticeList.length === 0) {
-//             const detailText = await _.text(noticeDetailLink)
-//             const $1 = cheerio.load(detailText)
-//             const noticeDetailHtml = $1('.notice').html()
-    
-//             // daoNotice.created({
-//             //     noticeName,
-//             //     noticeDetailLink,
-//             //     noticeCreateTime,
-//             //     noticeState,
-//             //     noticeDetailHtml,
-//             //     isDel: false,
-//             //     createTime: Date.now()
-//             // })
-//         }
-//     })
-//     return listDom.length
-// }
-
-var sleep = function (time) {
-    return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-            // 返回 ‘ok’
-            resolve('ok');
-        }, time);
-    })
-};
-let sss = 0
 // 火币
-exports.huobi = async (count = 1) => {
+exports.huoBi = async (count = 1) => {
     const url = `https://www.huobi.com/p/content/notice?page=${count}`
     const text = await _.text(url)
     const $ = cheerio.load(text)
@@ -86,9 +34,6 @@ exports.huobi = async (count = 1) => {
         }, {
             noticeName: 1
         })
-
-        // 优化爬虫，当前页码全为已获取数据，终止后面爬虫工作
-        // isGoOn.push(noticeList.length === 0)
 
         if(noticeList.length === 0) {
             const noticeDes = doms.find('.news').text()
@@ -118,6 +63,9 @@ exports.huobi = async (count = 1) => {
         await exports.huobi(count + 1)
     }
 }
+
+
+
 
 // ico365
 exports.ico365 = async (options = {curnum: 0, addnum: 20}) => {

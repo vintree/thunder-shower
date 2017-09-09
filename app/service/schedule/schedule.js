@@ -29,10 +29,20 @@ async function second() {
     });
 }
 
+async function noticeHuoBi() {
+    var rule = new schedule.RecurrenceRule();
+    rule.minute = 8;
+    var j = schedule.scheduleJob(rule, function(){
+        console.log('现在时间：',new Date())
+        log.action.info('Schedule task: bizhongchou')
+        notice.huoBi()
+    })
+}
+
 exports.init = async () => {
     await first()
     await second()
 
-    notice.huobi()
+    await noticeHuoBi()
     // site.ico365()
 }
