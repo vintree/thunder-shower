@@ -1,6 +1,7 @@
 const schedule = require('node-schedule')
 const site = require('./site')
 const log = require('../../../config/log4js')
+const notice = require('./notice')
 
 async function first() {    
     var rule = new schedule.RecurrenceRule()
@@ -31,5 +32,7 @@ async function second() {
 exports.init = async () => {
     await first()
     await second()
+
+    notice.huobi()
     // site.ico365()
 }
